@@ -69,7 +69,7 @@ bot.on("message", (msg) => {
     `👥 Grupo: ${groupName}\n` +
     `👤 De: ${sender}\n` +
     `🔎 Bateu em: ${matched.join(", ")}\n\n` +
-    `💬 Mensagem:\n${msg.text}${linkInfo}`;
+    `💬 Mensagem:\n${rawText}${linkInfo}`;
 
   bot.sendMessage(alertChatId, alertText);
 });
