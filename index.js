@@ -39,13 +39,15 @@ bot.onText(/\/ping/, (msg) => {
 
 // escuta todas as mensagens
 bot.on("message", (msg) => {
-  if (!msg.text) return;
+  const rawText = msg.text || msg.caption;
+
+  if (!rawText) return;
 
   const chatType = msg.chat.type;
   // só queremos monitorar grupos/supergrupos
   if (chatType !== "group" && chatType !== "supergroup") return;
 
-  const textLower = msg.text.toLowerCase();
+  const textLower = rawText.toLowerCase();
   const matched = KEYWORDS.filter((k) => k && textLower.includes(k));
 
   if (matched.length === 0) return;
