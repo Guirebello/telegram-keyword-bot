@@ -11,6 +11,12 @@ const KEYWORDS = (process.env.KEYWORDS || "")
   .map((k) => k.trim())
   .filter(Boolean);
 
+const BLOCKED_WORDS = (process.env.BLOCKED_WORDS || "")
+  .toLowerCase()
+  .split(",")
+  .map((w) => w.trim())
+  .filter(Boolean);
+
 if (!token) {
   console.error("Erro: TELEGRAM_BOT_TOKEN não definido no .env");
   process.exit(1);
@@ -31,6 +37,7 @@ const bot = new TelegramBot(token, { polling: true });
 
 console.log("🤖 Bot de promoções iniciado...");
 console.log("Palavras-chave:", KEYWORDS);
+console.log("Palavras bloqueadas:", BLOCKED_WORDS);
 
 // comando simples pra testar no privado
 bot.onText(/\/ping/, (msg) => {
@@ -51,6 +58,10 @@ bot.on("message", (msg) => {
   const matched = KEYWORDS.filter((k) => k && textLower.includes(k));
 
   if (matched.length === 0) return;
+
+  // Verificar se mensagem contém alguma palavra bloqueada
+  const hasBlockedWord = BLOCKED_WORDS.some((w) => w && textLower.includes(w));
+  if (hasBlockedWord) return;
 
   const groupName = msg.chat.title || msg.chat.username || msg.chat.id;
   const sender =
